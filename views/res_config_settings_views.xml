@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+###################################################################################
+#
+#    Copyright (c) 2021 Cyril MORISSE (github: cmorisse)
+#
+#    This file is a part of 'inouk_attachments_storage' addon
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
+-->
+
+<odoo>
+	<record id="res_config_settings_view_form" model="ir.ui.view">
+	    <field name="name">res.config.settings.view.form</field>
+	    <field name="model">res.config.settings</field>
+	    <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+	    <field name="arch" type="xml">
+			<div name="integration" position="after">
+				<h2>Attachment Storage (Inouk)</h2>
+				<div class="row mt16 o_settings_container">
+
+					<div class="col-12 col-lg-6 o_setting_box" id="cn_ifpsd">
+						<div class="o_setting_left_pane">
+						</div>
+						<div class="o_setting_right_pane" id="cn_ifpsd_settings">
+							<span class="o_form_label">Attachment Storage Location</span>
+							<div class="text-muted">
+								This is a GUI for Odoo standard System Parameter 'ir_attachment.location'.
+							</div>
+							<div class="text-muted">
+								<field name="ik_attachment_storage_location"/>
+							</div>
+							<button class="btn-warning" 
+									string="Move all Attachments to Specified Storage" 
+									type="object" 
+									name="btn_move_attachment_to_storage" 
+									/>
+
+						</div>
+					</div>                    
+
+					<div class="col-12 col-lg-6 o_setting_box" id="ikas_ambs">
+						<div class="o_setting_left_pane">
+						</div>
+						<div class="o_setting_right_pane">
+							<span class="o_form_label">Attachment Migration Batch Size</span>
+							<div class="text-muted">
+								Defines the work batch size of 'attachments' when they are 
+								migrated to storage. 
+								Default (when unset) is 50.									
+							</div>
+							<div class="text-muted">
+								<field name="ik_attachment_migration_batch_size"/>
+							</div>
+						</div>
+					</div>                    
+				</div>
+			</div>
+	    </field>
+	</record>
+
+</odoo>

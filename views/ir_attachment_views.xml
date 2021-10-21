@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+###################################################################################
+#
+#    Copyright (c) 2021 Cyril MORISSE (github: cmorisse)
+#
+#    This file is a part of 'inouk_attachments_storage' addon
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Lesser General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public License
+#    along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###################################################################################
+-->
+<odoo>
+
+    <record id="ikas_ir_attachment_formview_inherit" model="ir.ui.view">
+        <field name="name">ikas.ir_attachment.searchview_inherit</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='description_group']" position="before">
+                <group string="Inouk Attachments Storage" name="grouo__inouk_attachment_storage" >
+                    <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                    <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                    <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ikas_ir_attachment__treeview_inherit" model="ir.ui.view">
+        <field name="name">ikas.ir_attachment.treeview_inherit</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="mimetype" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ikas_ir_attachment__searchview_inherit" model="ir.ui.view">
+        <field name="name">ikas.ir_attachment.searchview_inherit</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='url_filter']" position="before">
+                <separator/>
+                <filter name="all_data" string="All Data" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
+                <filter name="is_field_data" string="Field Data" domain="[('res_field', '!=', False)]"/>
+                <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group//filter[last()]" position="before">
+                <filter name="groupby__res_model" string="Related model"  context="{'group_by': 'res_model'}" />
+                <filter name="groupby__res_field" string="Related field" context="{'group_by': 'res_field'}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

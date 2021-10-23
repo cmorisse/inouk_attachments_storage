@@ -1,9 +1,8 @@
 inouk_attachments_storage
 =========================
 
-Technical module to provide tools and mixins. It extends the general settings
-view to include the option to migrate the attachment storage. Furthermore it
-offers a Group and Hierarchy mixin.
+Technical module that extends the general settings view to include the option 
+to migrate the attachment storage. 
 
 
 Installation / Upgrade

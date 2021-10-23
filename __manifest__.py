@@ -19,8 +19,8 @@
 #
 ###################################################################################
 {
-    "name": "Inouk ir.attachments Storage",
-    "summary": """Simple GUI ti manage attachments storage locations.""",
+    "name": "Inouk Attachments Storage (ir.attachments)",
+    "summary": """Simple GUI to manage attachments storage locations.""",
     "version": "13.0.1",
     "category": "Extra Tools",
     "license": "LGPL-3",

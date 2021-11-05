@@ -43,3 +43,6 @@ class ResConfigSettings(models.TransientModel):
 
     def btn_move_attachment_to_storage(self):
         self.env["ir.attachment"].move_attachment_to_storage()
+
+    def btn_launch_attachment_storage_check(self):
+        self.env["ir.attachment"].launch_check_file_attachments_storage()

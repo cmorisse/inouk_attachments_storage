@@ -24,6 +24,8 @@ from odoo import api, models, fields
 from odoo.tools.translate import _
 from odoo.exceptions import UserError,AccessError
 
+from odoo.addons.inouk_message_queue.api import processor_method
+
 _logger = logging.getLogger("IKAttachmentStorage")
 
 
@@ -38,6 +40,25 @@ ATTACHMENT_LOCATION_LISTS = [
 
 class InoukIRAttachment(models.Model):
     _inherit = "ir.attachment"
+
+    @processor_method(processor_visibility_timeout=3600)
+    def check_file_attachments_storage(self, _imq_logger=None):
+        """Check File Attachments Storage"""
+        _task_logger = _imq_logger or _logger
+        broken_attachment_ids = []
+        for attachment_obj in self.search([]):
+            if attachment_obj.store_fname and not record.datas:
+                _task_logger.error("Attachment %s file is not reachable", attachment_obj)
+                broken_attachment_ids.append(attachment_obj.id)
+            else:
+                _task_logger.info("Attachment %s checked with no error.", attachment_obj)
+        if broken_attachment_ids:
+            _task_logger.error("Broken attachement ids: %s", broken_attachment_ids)
+        return broken_attachment_ids
+
+    @api.model
+    def launch_check_file_attachments_storage(self):
+        self.check_file_attachments_storage.run_async(self)
 
     @api.model
     def move_attachment_to_storage(self, _imq_logger=None):

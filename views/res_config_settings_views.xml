@@ -65,6 +65,13 @@
 							<div class="text-muted">
 								<field name="ik_attachment_migration_batch_size"/>
 							</div>
+							<button class="btn-warning" 
+									string="Check all Files Attachments Storage" 
+									type="object" 
+									help="Launch asynchronous Task in default Queue that will check all file attachments storage."
+									name="btn_launch_attachment_storage_check" 
+									/>
+
 						</div>
 					</div>                    
 				</div>

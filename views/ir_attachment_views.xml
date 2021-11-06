@@ -63,9 +63,9 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='url_filter']" position="before">
                 <separator/>
-                <filter name="all_data" string="All Data" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
-                <filter name="is_field_data" string="Field Data" domain="[('res_field', '!=', False)]"/>
+                <filter name="is_field_data" string="Fields Data" domain="[('res_field', '!=', False)]"/>
                 <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
+                <filter name="all_data" string="All Data (Fields and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
                 <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True)]"/>
                 <separator/>
             </xpath>

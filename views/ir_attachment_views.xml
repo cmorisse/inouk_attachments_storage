@@ -32,7 +32,7 @@
                 <group string="Inouk Attachments Storage" name="grouo__inouk_attachment_storage" >
                     <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
                     <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
-                    <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                    <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
                     <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}"/>
                 </group>
             </xpath>

@@ -41,6 +41,8 @@ ATTACHMENT_LOCATION_LISTS = [
 class InoukIRAttachment(models.Model):
     _inherit = "ir.attachment"
 
+    ikas_is_file_storage_broken = fields.Boolean("Is File Storage Broken ?")
+
     @processor_method(processor_visibility_timeout=3600)
     def check_file_attachments_storage(self, _imq_logger=None):
         """Check File Attachments Storage"""
@@ -54,6 +56,7 @@ class InoukIRAttachment(models.Model):
                 _task_logger.info("Attachment %s checked with no error.", attachment_obj)
         if broken_attachment_ids:
             _task_logger.error("Broken attachement ids: %s", broken_attachment_ids)
+            self.browse(broken_attachment_ids).write({"ikas_is_file_storage_broken": True})
         return broken_attachment_ids
 
     @api.model

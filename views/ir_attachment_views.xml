@@ -32,6 +32,7 @@
                 <group string="Inouk Attachments Storage" name="grouo__inouk_attachment_storage" >
                     <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
                     <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                    <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}"/>
                     <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}"/>
                 </group>
             </xpath>
@@ -43,8 +44,14 @@
         <field name="model">ir.attachment</field>
         <field name="inherit_id" ref="base.view_attachment_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="id" optional="hide"/>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
-                <field name="mimetype" />
+                <field name="mimetype" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='create_uid']" position="after">
+                <field name="ikas_is_file_storage_broken" string="File Broken" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -59,6 +66,7 @@
                 <filter name="all_data" string="All Data" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
                 <filter name="is_field_data" string="Field Data" domain="[('res_field', '!=', False)]"/>
                 <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
+                <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True)]"/>
                 <separator/>
             </xpath>
             <xpath expr="//group//filter[last()]" position="before">

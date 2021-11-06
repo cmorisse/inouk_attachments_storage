@@ -51,12 +51,14 @@ class InoukIRAttachment(models.Model):
         """Check File Attachments Storage"""
         _task_logger = _imq_logger or _logger
         broken_attachment_ids = []
-        for attachment_obj in self.search([]):
-            if attachment_obj.store_fname and not record.datas:
+        attachment_to_check_objs = self.search(['|',('res_field', '=', False),('res_field', '!=', False)])
+        for attachment_obj in attachment_to_check_objs:
+            if attachment_obj.store_fname and not attachment_obj.datas:
                 _task_logger.error("Attachment %s file is not reachable", attachment_obj)
                 broken_attachment_ids.append(attachment_obj.id)
             else:
                 _task_logger.info("Attachment %s checked with no error.", attachment_obj)
+        _task_logger.info("%s 'ir.attachment' checked.", len(attachment_to_check_objs))
         if broken_attachment_ids:
             _task_logger.error("Broken attachement ids: %s", broken_attachment_ids)
             self.browse(broken_attachment_ids).write({"ikas_is_file_storage_broken": True})

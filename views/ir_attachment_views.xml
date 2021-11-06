@@ -23,7 +23,7 @@
 -->
 <odoo>
 
-    <record id="ikas_ir_attachment_formview_inherit" model="ir.ui.view">
+    <record id="ikas_ir_attachment__formview_inherit" model="ir.ui.view">
         <field name="name">ikas.ir_attachment.formview_inherit</field>
         <field name="model">ir.attachment</field>
         <field name="inherit_id" ref="base.view_attachment_form"/>

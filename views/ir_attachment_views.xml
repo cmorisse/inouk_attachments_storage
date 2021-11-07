@@ -66,12 +66,13 @@
                 <filter name="is_field_data" string="Fields Data" domain="[('res_field', '!=', False)]"/>
                 <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
                 <filter name="all_data" string="All Data (Fields and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
-                <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True)]"/>
+                <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True),'|',('res_field', '=', False),('res_field', '!=', False)]"/>
                 <separator/>
             </xpath>
             <xpath expr="//group//filter[last()]" position="before">
                 <filter name="groupby__res_model" string="Related model"  context="{'group_by': 'res_model'}" />
                 <filter name="groupby__res_field" string="Related field" context="{'group_by': 'res_field'}" />
+                <filter name="groupby__broken" string="Broken status" context="{'group_by': 'ikas_is_file_storage_broken'}" />
             </xpath>
         </field>
     </record>

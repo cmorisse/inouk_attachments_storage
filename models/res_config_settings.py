@@ -41,8 +41,8 @@ class ResConfigSettings(models.TransientModel):
         # self.env['ir.config_parameter'].sudo().get_param('ik.ir_attachment_migration_batch_size')
     )
 
-    def btn_move_attachment_to_storage(self):
-        self.env["ir.attachment"].move_attachment_to_storage()
+    def btn_move_all_attachments_to_storage(self):
+        self.env["ir.attachment"].move_all_attachments_to_storage()
 
     def btn_launch_attachment_storage_check(self):
         self.env["ir.attachment"].launch_check_file_attachments_storage()

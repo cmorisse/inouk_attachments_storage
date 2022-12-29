@@ -46,7 +46,7 @@
 							<button class="btn-warning" 
 									string="Move all Attachments to Specified Storage" 
 									type="object" 
-									name="btn_move_attachment_to_storage" 
+									name="btn_move_all_attachments_to_storage" 
 									/>
 
 						</div>

@@ -34,6 +34,7 @@
                     <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
                     <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
                     <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}"/>
+                    <button string="Check file" name="btn_check_file" type="object" class="btn-info ik_inlinebtn" />
                 </group>
             </xpath>
         </field>
@@ -50,6 +51,9 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="mimetype" optional="show" />
             </xpath>
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="store_fname" optional="hide" />
+            </xpath>
             <xpath expr="//field[@name='create_uid']" position="after">
                 <field name="ikas_is_file_storage_broken" string="File Broken" optional="hide"/>
             </xpath>
@@ -63,10 +67,15 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='url_filter']" position="before">
                 <separator/>
+                <filter name="is_stored_in_file" string="Is Stored in File" domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '!=', False)]"/>
                 <filter name="is_field_data" string="Fields Data" domain="[('res_field', '!=', False)]"/>
                 <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
-                <filter name="all_data" string="All Data (Fields and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
+                <filter name="all_data" string="All Data (Fields Data and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
                 <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True),'|',('res_field', '=', False),('res_field', '!=', False)]"/>
+                <filter name="is_bad_record" string="Bad records" 
+                        domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '=', False),('db_datas', '=', False)]"
+                        help="Records with no file name and no db_datas"
+                        />
                 <separator/>
             </xpath>
             <xpath expr="//group//filter[last()]" position="before">

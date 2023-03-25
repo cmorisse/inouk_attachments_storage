@@ -20,7 +20,9 @@
 ###################################################################################
 {
     "name": "Inouk Attachments Storage (ir.attachments)",
-    "summary": """Simple GUI to manage attachments storage locations.""",
+    "summary": """Simple GUI to manage attachments storage locations.
+    This addon is compatible with Odoo 13, 14, 15, 16
+    """,
     "version": "13.0.1",
     "category": "Extra Tools",
     "license": "LGPL-3",

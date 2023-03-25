@@ -28,13 +28,19 @@
         <field name="model">ir.attachment</field>
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='description_group']" position="before">
-                <group string="Inouk Attachments Storage" name="grouo__inouk_attachment_storage" >
-                    <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
-                    <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
-                    <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
-                    <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}"/>
-                    <button string="Check file" name="btn_check_file" type="object" class="btn-info ik_inlinebtn" />
+            <xpath expr="//group[@name='description_group']" position="after" >
+                <group string="Inouk Attachments Storage" name="group__inouk_attachment_storage" colspan="4">
+                    <group>
+                        <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                        <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
+                        <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
+                        <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}" widget="binary" filename="name"/>
+                    </group>
+                    <group>
+                        <button string="Check file" name="btn_check_file" type="object" colspan="2" class="btn-info ik_inlinebtn" 
+                                help="Try to open file."
+                                />
+                    </group>
                 </group>
             </xpath>
         </field>

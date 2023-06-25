@@ -137,7 +137,7 @@ class InoukIRAttachment(models.Model):
         self.migrate()
 
     @processor_method(processor_visibility_timeout=600)
-    def migrate_all_attachments(self, _imq_logger=None):
+    def migrate_all_attachments(self, run_async:bool=True, _imq_logger=None):
         """ Move all attachments into currently configured storage 
         Called by 'Move all Attachments to Specified Storage' button.
         """
@@ -168,17 +168,45 @@ class InoukIRAttachment(models.Model):
             _ids = [_e[0] for _e in _r]
             if not _r: break 
             _task_logger.info("Launch attachments for batch of _ids:%s", _ids)
-            self.migrate_attachment_batch.run_async(self, _ids)
+            if run_async:
+                self.migrate_attachment_batch.run_async(self, _ids)
+            else:
+                self.migrate_attachment_batch(_ids)
+
             idx += 1
         _task_logger.info("%s move batches launched.", idx)
         return 
 
     @api.model
-    def move_all_attachments_to_storage(self):
+    def move_all_attachments_to_storage(self, run_async:bool=True):
         """ Launches migration of all attachments into currently configured storage 
         Called by 'Move all Attachments to Specified Storage' button.
         """
         if not self.env.is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
-        _r = self.sudo().migrate_all_attachments.run_async(self)
+        if run_async:
+            _r = self.sudo().migrate_all_attachments.run_async(self)
+        else:
+            _r = self.sudo().migrate_all_attachments()
+        return _r
+
+
+    @api.model
+    def initial_move_all_attachments_to_storage(self, location:str):
+        """ Set value of ir.attachment.location then migrate all attachment to specified storage.
+        This method does not use queue engine so by design it must be called on a reduced set of attachment.
+        That's why it should only be used for initial setup.
+        """
+        if location not in ('file', 'db'):
+            raise Exception("Unsupported value for location:'%s' (allowed: 'db', 'file')" % (
+                location,
+            ))
+        _logger.warning("Moving all attachments to '%s'", location)
+        _r = self.env["ir.config_parameter"].sudo().set_param(
+            "ir_attachment.location", 
+            location
+        )
+        self.flush()
+        
+        _r = self.migrate_all_attachments(run_async=False)
         return _r

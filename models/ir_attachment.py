@@ -206,7 +206,7 @@ class InoukIRAttachment(models.Model):
             "ir_attachment.location", 
             location
         )
-        self.flush()
+        self.flush_model()
         
         _r = self.migrate_all_attachments(run_async=False)
         return _r

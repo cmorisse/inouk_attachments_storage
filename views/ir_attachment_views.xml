@@ -30,15 +30,28 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='description_group']" position="after" >
                 <group string="Inouk Attachments Storage" name="group__inouk_attachment_storage" colspan="4">
-                    <group>
+                    <group class='ik_lw180'>
                         <field name="store_fname" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
                         <field name="file_size" readonly="1" attrs="{'invisible':[('store_fname','=',False)]}"/>
                         <field name="ikas_is_file_storage_broken" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
+                        <field name="ikas_file_location" readonly="0" attrs="{'invisible':[('store_fname','=',False)]}" />
                         <field name="db_datas" readonly="1" attrs="{'invisible':[('db_datas','=',False)]}" widget="binary" filename="name"/>
                     </group>
                     <group>
-                        <button string="Check file" name="btn_check_file" type="object" colspan="2" class="btn-info ik_inlinebtn" 
+                        <button string="Check file" 
+                                name="btn_check_file" 
+                                type="object" 
+                                colspan="2" 
+                                class="btn-info ik_inlinebtn" 
+                                icon="fa-thermometer"
                                 help="Try to open file."
+                                />
+                        <button string="Migrate file" 
+                                name="btn_migrate_file" 
+                                type="object" 
+                                icon="fa-bug"
+                                colspan="2" class="btn-danger ik_inlinebtn" 
+                                help="Launch migration of just this file. Use only to test and debug."
                                 />
                     </group>
                 </group>

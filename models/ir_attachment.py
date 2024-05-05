@@ -56,16 +56,24 @@ class InoukIRAttachment(models.Model):
     def btn_check_file(self):
         """ Try to open file. """
         self.ensure_one()
-        if not self.store_fname:
-            _logger.info("No filename on %s.", self)
-            return
-        _r = self._file_read(self.store_fname, bin_size=True)
-        if not _r:
-            self.ikas_is_file_storage_broken = True
-        else:
-            self.ikas_is_file_storage_broken = False
+        self.check_file_attachments_storage_batch([self.id])
 
-    @processor_method(processor_visibility_timeout=600)
+        #if not self.store_fname:
+        #    _logger.info("No filename on %s.", self)
+        #    return
+        #_r = self._file_read(self.store_fname, bin_size=True)
+        #if not _r:
+        #    self.ikas_is_file_storage_broken = True
+        #else:
+        #    self.ikas_is_file_storage_broken = False
+
+    def btn_migrate_file(self):
+        """ Migrate file when is is stored in a different storage than current parameter !
+        """ 
+        self.ensure_one()
+        self.migrate_attachment_batch([self.id])
+
+    @processor_method(processor_visibility_timeout=2000)
     def check_file_attachments_storage_batch(self, ids, _imq_logger=None):
         """Check a batch of File Attachments Storage for missing files.
         """
@@ -74,18 +82,20 @@ class InoukIRAttachment(models.Model):
         _task_logger.info("Checking attachements: %s", ids)
         attachment_to_check_objs = self.sudo().browse(ids)
         for attachment_obj in attachment_to_check_objs:
-            if attachment_obj.store_fname and not attachment_obj.datas:
+            _task_logger.info("Checking attachement: %s", attachment_obj)
+            # we must use attachment_obj[Ø] to avoid fetcing data for all recordset
+            if attachment_obj.store_fname and not attachment_obj[0].datas:
                 _task_logger.error("Attachment %s file is not reachable", attachment_obj)
                 broken_attachment_ids.append(attachment_obj.id)
             else:
-                _task_logger.info("Attachment %s file checked with no error.", attachment_obj)
+                _task_logger.info("Attachment %s file checked Ok.", attachment_obj)
         _task_logger.info("%s 'ir.attachment' checked.", len(attachment_to_check_objs))
         if broken_attachment_ids:
             _task_logger.error("Broken attachement ids: %s", broken_attachment_ids)
             self.browse(broken_attachment_ids).write({"ikas_is_file_storage_broken": True})
         return broken_attachment_ids
 
-    @processor_method(processor_visibility_timeout=120)
+    @processor_method(processor_visibility_timeout=2000)
     def check_file_attachments_storage(self, _imq_logger=None):
         """Check File Attachments Storage"""
         _task_logger = _imq_logger or _logger
@@ -127,6 +137,7 @@ class InoukIRAttachment(models.Model):
                 len(attachment_objs),
                 _storage
             )
+            # To migrate we juste rewrite object datas
             attachment_obj.write({
                 "datas": attachment_obj.datas, 
                 "mimetype": attachment_obj.mimetype
@@ -145,7 +156,7 @@ class InoukIRAttachment(models.Model):
         if not self.env.is_admin():
             raise AccessError(_('Only administrators can execute this action.'))
 
-        _storage = self._storage()  # get valeu of ir.parameter
+        _storage = self._storage()  # get value of ir.parameter
         if not _storage in ATTACHMENT_LOCATION_LISTS:
             return super(IrAttachment, self).force_storage()
 

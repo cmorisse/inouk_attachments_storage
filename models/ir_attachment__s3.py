@@ -37,7 +37,7 @@ _logger = logging.getLogger("IKAttachmentStorage")
 IK_IR_ATTACHMENT_S3_INFO = None
 IK_IR_ATTACHMENT_S3_INFO_TTL = 90       # Cache is refreshed every 90s
 
-INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY = False
+INOUK_S3_PREFIX_S3_OBJECT_KEY_WITH_DATABASE = False
 
 
 class InoukIRAttachmentS3(models.Model):
@@ -61,7 +61,7 @@ class InoukIRAttachmentS3(models.Model):
         :returns: None but update IK_IR_ATTACHMENT_S3_INFO
         """
         global IK_IR_ATTACHMENT_S3_INFO
-        global INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY
+        global INOUK_S3_PREFIX_S3_OBJECT_KEY_WITH_DATABASE
 
         if IK_IR_ATTACHMENT_S3_INFO:  # TODO and age < 90s
             return
@@ -80,7 +80,7 @@ class InoukIRAttachmentS3(models.Model):
             'False'
         )
         s3_add_database_to_s3_object_key = s3_add_database_to_s3_object_key_raw.lower() == 'true'
-        INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY = s3_add_database_to_s3_object_key
+        INOUK_S3_PREFIX_S3_OBJECT_KEY_WITH_DATABASE = s3_add_database_to_s3_object_key
 
         s3_bucket            = os.environ.get("IK_IR_ATTACHMENT_S3_BUCKET", None)
         s3_endpoint_url      = os.environ.get("IK_IR_ATTACHMENT_S3_ENDPOINT_URL", None)
@@ -134,8 +134,8 @@ class InoukIRAttachmentS3(models.Model):
 
         for attempt in range(nb_retries):
             try:
-                if INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY:
-                    key = "%s/%s" (self.env.cr.dbname, fname)
+                if INOUK_S3_PREFIX_S3_OBJECT_KEY_WITH_DATABASE:
+                    key = "%s/%s" % (self.env.cr.dbname, fname)
                 else:
                     key = fname
                 _logger.debug(f"Trying to get key={key} from s3 bucket:'{s3_bucket}'.")
@@ -191,7 +191,7 @@ class InoukIRAttachmentS3(models.Model):
 
         :returns: None of fname if put was sucessful
         """
-        _logger.info("_ikas_file_read_s3(%s)", fname)
+        _logger.info("_ikas_file_write_s3(%s)", fname)
 
         # self._get_ikas_s3_config() must have been called before.
         s3 = boto3.client(
@@ -209,8 +209,8 @@ class InoukIRAttachmentS3(models.Model):
         for attempt in range(nb_retries):
 
             try:
-                if INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY:
-                    key = "%s/%s" (self.env.cr.dbname, fname)
+                if INOUK_S3_PREFIX_S3_OBJECT_KEY_WITH_DATABASE:
+                    key = "%s/%s" % (self.env.cr.dbname, fname)
                 else:
                     key = fname
                 _logger.debug(f"Trying to put key '{key}' in s3 bucket:'{s3_bucket}'.")

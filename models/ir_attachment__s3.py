@@ -118,7 +118,7 @@ class InoukIRAttachmentS3(models.Model):
             - 
         """
         # self._get_ikas_s3_config() must have been called before.
-        _logger.info("_ikas_file_read_s3(%s)", fname)
+        #_logger.info("_ikas_file_read_s3(%s)", fname)
         s3 = boto3.client(
             service_name="s3",
             endpoint_url = IK_IR_ATTACHMENT_S3_INFO.get("S3_ENDPOINT_URL", None),

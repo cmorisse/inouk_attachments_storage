@@ -128,13 +128,13 @@ class InoukIRAttachment(models.Model):
         """
         _task_logger = _imq_logger or _logger
         _storage = self._storage()  # get value of ir.parameter
-        attachment_objs = self.sudo().browse(ids)
-        for idx, attachment_obj in enumerate(attachment_objs, start=1):
+        for idx, attachment_id in enumerate(ids, start=1):
+            attachment_obj = self.sudo().browse(attachment_id)
             _task_logger.info(
                 "Migrate Attachment %s (%s/%s) to '%s' storage.",
                 attachment_obj,
                 idx,
-                len(attachment_objs),
+                len(ids),
                 _storage
             )
             # To migrate we juste rewrite object datas
@@ -142,7 +142,7 @@ class InoukIRAttachment(models.Model):
                 "datas": attachment_obj.datas, 
                 "mimetype": attachment_obj.mimetype
             })
-        _task_logger.info("Finished migration to storage:'%s' of %s ", _storage, attachment_objs)
+        _task_logger.info("Finished migration to storage:'%s' of ir.attachments:%s", _storage, ids)
 
     def btn_migrate(self):
         self.migrate()

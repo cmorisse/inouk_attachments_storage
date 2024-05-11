@@ -31,6 +31,7 @@
     "contributors": ["Cyril MORISSE <cmorisse@boxes3.net>"],
     "depends": ["base_setup", "inouk_message_queue"],
     "data": [
+        "data/ir_config_parameter.xml",
         "views/ir_attachment_views.xml",
         "views/res_config_settings_views.xml",
     ], 

@@ -37,6 +37,8 @@ _logger = logging.getLogger("IKAttachmentStorage")
 IK_IR_ATTACHMENT_S3_INFO = None
 IK_IR_ATTACHMENT_S3_INFO_TTL = 90       # Cache is refreshed every 90s
 
+INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY = False
+
 
 class InoukIRAttachmentS3(models.Model):
     """ Get and Put attachment files into S3 bucket defined by ENV VARs above.
@@ -59,6 +61,7 @@ class InoukIRAttachmentS3(models.Model):
         :returns: None but update IK_IR_ATTACHMENT_S3_INFO
         """
         global IK_IR_ATTACHMENT_S3_INFO
+        global INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY
 
         if IK_IR_ATTACHMENT_S3_INFO:  # TODO and age < 90s
             return
@@ -67,10 +70,18 @@ class InoukIRAttachmentS3(models.Model):
         #s3_enabled           = s3_enabled_raw.lower() == 'true'
 
         s3_enabled_raw = self.env['ir.config_parameter'].sudo().get_param(
-            'ik.ir_attachment_s3_enabled', 
+            'inouk.ir_attachment_s3_enabled', 
             'False'
         )
         s3_enabled           = s3_enabled_raw.lower() == 'true'
+
+        s3_add_database_to_s3_object_key_raw = self.env['ir.config_parameter'].sudo().get_param(
+            'inouk.ir_attachment_s3_use_database_as_object_key_prefix', 
+            'False'
+        )
+        s3_add_database_to_s3_object_key = s3_add_database_to_s3_object_key_raw.lower() == 'true'
+        INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY = s3_add_database_to_s3_object_key
+
         s3_bucket            = os.environ.get("IK_IR_ATTACHMENT_S3_BUCKET", None)
         s3_endpoint_url      = os.environ.get("IK_IR_ATTACHMENT_S3_ENDPOINT_URL", None)
         s3_access_key_id     = os.environ.get("IK_IR_ATTACHMENT_S3_ACCESS_KEY_ID", None)
@@ -123,10 +134,14 @@ class InoukIRAttachmentS3(models.Model):
 
         for attempt in range(nb_retries):
             try:
-                _logger.debug(f"Trying to get key={fname} from s3 bucket:'{s3_bucket}'.")
+                if INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY:
+                    key = "%s/%s" (self.env.cr.dbname, fname)
+                else:
+                    key = fname
+                _logger.debug(f"Trying to get key={key} from s3 bucket:'{s3_bucket}'.")
                 response = s3.get_object(
                     Bucket=s3_bucket, 
-                    Key=fname
+                    Key=key
                 )
                 return response["Body"].read()
 
@@ -182,11 +197,16 @@ class InoukIRAttachmentS3(models.Model):
         max_delay = 10      # in seconds
         s3_bucket = IK_IR_ATTACHMENT_S3_INFO['S3_BUCKET']
         for attempt in range(nb_retries):
+
             try:
-                _logger.debug(f"Trying to put key '{fname}' in s3 bucket:'{s3_bucket}'.")
+                if INOUK_S3_ADD_DATABASE_TO_S3_OBJECT_KEY:
+                    key = "%s/%s" (self.env.cr.dbname, fname)
+                else:
+                    key = fname
+                _logger.debug(f"Trying to put key '{key}' in s3 bucket:'{s3_bucket}'.")
                 response = s3.put_object(
                     Bucket=s3_bucket, 
-                    Key=fname, 
+                    Key=key, 
                     Body=value
                 )
                 _logger.info(f"Successfully uploaded file '{fname}' to S3 bucket '{s3_bucket}'.")

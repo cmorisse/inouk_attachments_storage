@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_attachment_s3_enabled" model="ir.config_parameter">
+            <field name="key">inouk.ir_attachment_s3_enabled</field>
+            <field name="value">False</field>
+        </record>
+        <record id="ir_attachment_s3_use_database_as_object_key_prefix" model="ir.config_parameter">
+            <field name="key">inouk.ir_attachment_s3_use_database_as_object_key_prefix</field>
+            <field name="value">False</field>
+        </record>
+    </data>
+</odoo>

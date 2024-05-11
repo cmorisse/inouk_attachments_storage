@@ -36,7 +36,6 @@ In Settings
     - Select File (as Storage)
     - Define this ENV Vars (adjust depending on your storage, this comes from a working R2 Setup)
 
-IK_IR_ATTACHMENT_S3_ENABLED=TRUE 
 IK_IR_ATTACHMENT_S3_BUCKET=filestore-cyril-mpy13cdockerdev-01
 IK_IR_ATTACHMENT_S3_ENDPOINT_URL=https://xxxxxxxxxxxxxxxxxxxxx.eu.r2.cloudflarestorage.com
 IK_IR_ATTACHMENT_S3_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxxxxxxx
@@ -45,7 +44,13 @@ IK_IR_ATTACHMENT_S3_REGION=auto
 
 Finally click on the Yellow button "Move all All Attachments to Specified Storage" in Settings
 
+Warning !!!
 
+    To enable, create a setting (Config. Parameter):
+ 
+    ik.ir_attachment_s3_enabled = True or true 
+
+    All others values will disable s3.
 
 Author & Maintainer
 ===================

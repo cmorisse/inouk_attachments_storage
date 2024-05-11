@@ -63,7 +63,13 @@ class InoukIRAttachmentS3(models.Model):
         if IK_IR_ATTACHMENT_S3_INFO:  # TODO and age < 90s
             return
 
-        s3_enabled_raw       = os.environ.get("IK_IR_ATTACHMENT_S3_ENABLED", '')
+        #s3_enabled_raw       = os.environ.get("IK_IR_ATTACHMENT_S3_ENABLED", '')
+        #s3_enabled           = s3_enabled_raw.lower() == 'true'
+
+        s3_enabled_raw = self.env['ir.config_parameter'].sudo().get_param(
+            'ik.ir_attachment_s3_enabled', 
+            'False'
+        )
         s3_enabled           = s3_enabled_raw.lower() == 'true'
         s3_bucket            = os.environ.get("IK_IR_ATTACHMENT_S3_BUCKET", None)
         s3_endpoint_url      = os.environ.get("IK_IR_ATTACHMENT_S3_ENDPOINT_URL", None)

@@ -24,6 +24,7 @@ import logging
 import random
 import time
 import os
+import base64
 
 from odoo import api, models, fields
 from odoo.tools.translate import _
@@ -171,7 +172,7 @@ class InoukIRAttachmentS3(models.Model):
             if attachment_obj.store_fname:
                 attachment_obj.datas = IrAttachment._file_read(attachment_obj.store_fname, bin_size)
             else:
-                attachment_obj.datas = attachment_obj.db_datas
+                attachment_obj.datas = base64.b64encode(attachment_obj.db_datas)
 
     @api.model
     def _file_read(self, fname, bin_size):

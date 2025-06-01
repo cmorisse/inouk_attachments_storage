@@ -169,12 +169,12 @@ class InoukIRAttachmentS3(models.Model):
         IrAttachment = self.env['ir.attachment']
         for attachment_obj in self:
             if attachment_obj.store_fname:
-                attachment_obj.datas = IrAttachment._file_read(attachment_obj.store_fname, bin_size)
+                attachment_obj.datas = IrAttachment._file_read(attachment_obj.store_fname)
             else:
                 attachment_obj.datas = attachment_obj.db_datas
 
     @api.model
-    def _file_read(self, fname, bin_size):
+    def _file_read(self, fname):
         """ Read a file from S3 or fall back to the local file system."""
         self._get_ikas_s3_config()
         if IK_IR_ATTACHMENT_S3_INFO['S3_ENABLED']:
@@ -182,7 +182,7 @@ class InoukIRAttachmentS3(models.Model):
             if file_content:
                 return file_content
             _logger.warning(f"Attachment with key='{fname}' unexpectedly not found on s3.")
-        return super()._file_read(fname, bin_size)
+        return super()._file_read(fname)
 
     @api.model
     def _ikas_file_write_s3(self, fname, value):

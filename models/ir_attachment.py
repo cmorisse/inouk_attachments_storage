@@ -139,7 +139,8 @@ class InoukIRAttachment(models.Model):
             )
             # To migrate we juste rewrite object datas
             attachment_obj.write({
-                "datas": attachment_obj.datas, 
+                #"datas": attachment_obj.datas, 
+                "raw": attachment_obj.raw, 
                 "mimetype": attachment_obj.mimetype
             })
         _task_logger.info("Finished migration to storage:'%s' of ir.attachments:%s", _storage, ids)
@@ -217,7 +218,7 @@ class InoukIRAttachment(models.Model):
             "ir_attachment.location", 
             location
         )
-        self.flush()
+        self.flush_model()
         
         _r = self.migrate_all_attachments(run_async=False)
         return _r

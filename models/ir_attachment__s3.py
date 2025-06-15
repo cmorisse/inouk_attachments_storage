@@ -24,6 +24,7 @@ import logging
 import random
 import time
 import os
+import base64
 
 from odoo import api, models, fields
 from odoo.tools.translate import _
@@ -100,7 +101,7 @@ class InoukIRAttachmentS3(models.Model):
         
         # Check if the credentials are set
         if s3_enabled and not (s3_bucket and s3_access_key_id and s3_secret_access_key):
-            raise ValidationError(
+            raise UserError(
                 "S3 credentials not configured correctly. Please set the environment variables."
             )
         _logger.info("ir.attachment::IK_IR_ATTACHMENT_S3_INFO: %s", IK_IR_ATTACHMENT_S3_INFO)
@@ -171,7 +172,7 @@ class InoukIRAttachmentS3(models.Model):
             if attachment_obj.store_fname:
                 attachment_obj.datas = IrAttachment._file_read(attachment_obj.store_fname)
             else:
-                attachment_obj.datas = attachment_obj.db_datas
+                attachment_obj.datas = base64.b64decode(attachment_obj.db_datas) # Il fallait décoder db_datas
 
     @api.model
     def _file_read(self, fname):

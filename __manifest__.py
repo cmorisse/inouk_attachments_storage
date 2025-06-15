@@ -29,7 +29,7 @@
     "author": "Cyril MORISSE",
     "website": "https://github.com/cmorisse",
     "contributors": ["Cyril MORISSE <cmorisse@boxes3.net>"],
-    "depends": ["base_setup", "inouk_message_queue"],
+    "depends": ["base", "inouk_message_queue"],
     "data": [
         "data/ir_config_parameter.xml",
         "views/ir_attachment_views.xml",

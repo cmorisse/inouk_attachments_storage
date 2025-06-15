@@ -159,7 +159,7 @@ class InoukIRAttachment(models.Model):
 
         _storage = self._storage()  # get value of ir.parameter
         if not _storage in ATTACHMENT_LOCATION_LISTS:
-            return super(IrAttachment, self).force_storage()
+            return super(InoukIRAttachment, self).force_storage()
 
         _batch_size = int(
             self.env['ir.config_parameter'].sudo().get_param(

@@ -165,12 +165,12 @@ class InoukIRAttachmentS3(models.Model):
                 return None
 
     @api.depends('store_fname', 'db_datas')
-    def _compute_datas(self):
+    def _compute_raw(self):
         bin_size = self._context.get('bin_size')
         IrAttachment = self.env['ir.attachment']
         for attachment_obj in self:
             if attachment_obj.store_fname:
-                attachment_obj.datas = IrAttachment._file_read(attachment_obj.store_fname)
+                attachment_obj.datas = attachment_obj._file_read(attachment_obj.store_fname)
             else:
                 attachment_obj.datas = base64.b64decode(attachment_obj.db_datas) # Il fallait décoder db_datas
 

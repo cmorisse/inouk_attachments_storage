@@ -1,56 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-###################################################################################
-#
-#    Copyright (c) 2021 Cyril MORISSE (github: cmorisse)
-#
-#    This file is a part of 'inouk_attachments_storage' addon
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-###################################################################################
--->
-
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
 	<record id="res_config_settings_view_form" model="ir.ui.view">
 	    <field name="name">res.config.settings.view.form</field>
 	    <field name="model">res.config.settings</field>
-	    <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+	    <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
 	    <field name="arch" type="xml">
 			<xpath expr="//form" position="inside">
 				<app data-string="Attachment Storage (Inouk)" string="Attachment Storage (Inouk)" name="attachment_storage_inouk">
 					<setting title="This is a GUI for Odoo standard System Parameter 'ir_attachment.location'." name="asi_attachment_storage_location" string="Attachment Storage Location">
 						<div class="text-muted">
-							<field name="ik_attachment_storage_location"/>
+							<field name="ik_attachment_storage_location" />
 						</div>
-						<button class="btn-warning" 
-								string="Move all Attachments to Specified Storage" 
-								type="object" 
-								name="btn_move_all_attachments_to_storage" />
+						<button class="btn-warning" string="Move all Attachments to Specified Storage" type="object" name="btn_move_all_attachments_to_storage" />
 					</setting>
-					<setting title="Defines the work batch size of 'attachments' when they are 
-								migrated to storage. 
-								Default (when unset) is 50.	"
-							 ame="asi_attachment_migration_batch_size" string="Attachment Migration Batch Size">
+					<setting title="Defines the work batch size of 'attachments' when they are          migrated to storage.          Default (when unset) is 50. " ame="asi_attachment_migration_batch_size" string="Attachment Migration Batch Size">
 						<div class="text-muted">
-							<field name="ik_attachment_migration_batch_size"/>
+							<field name="ik_attachment_migration_batch_size" />
 						</div>
-						<button class="btn-warning" 
-								string="Check all Files Attachments Storage" 
-								type="object" 
-								help="Launch asynchronous Task in default Queue that will check all file attachments storage."
-								name="btn_launch_attachment_storage_check" />
+						<button class="btn-warning" string="Check all Files Attachments Storage" type="object" help="Launch asynchronous Task in default Queue that will check all file attachments storage." name="btn_launch_attachment_storage_check" />
 					</setting>
 				</app>
 			</xpath>

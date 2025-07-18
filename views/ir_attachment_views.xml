@@ -1,58 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-###################################################################################
-#
-#    Copyright (c) 2021 Cyril MORISSE (github: cmorisse)
-#
-#    This file is a part of 'inouk_attachments_storage' addon
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Lesser General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Lesser General Public License for more details.
-#
-#    You should have received a copy of the GNU Lesser General Public License
-#    along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-###################################################################################
--->
+<?xml version='1.0' encoding='utf-8'?>
 <odoo>
 
     <record id="ikas_ir_attachment__formview_inherit" model="ir.ui.view">
         <field name="name">ikas.ir_attachment.formview_inherit</field>
         <field name="model">ir.attachment</field>
-        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="inherit_id" ref="base.view_attachment_form" />
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='description_group']" position="after" >
+            <xpath expr="//group[@name='description_group']" position="after">
                 <group string="Inouk Attachments Storage" name="group__inouk_attachment_storage" colspan="4">
-                    <group class='ik_lw180'>
-                        <field name="store_fname" readonly="1" invisible="store_fname == False"/>
-                        <field name="file_size" readonly="1" invisible="store_fname == False"/>
-                        <field name="ikas_is_file_storage_broken" readonly="0" invisible="store_fname == False"/>
-                        <field name="ikas_file_location" readonly="0" invisible="store_fname == False"/>
-                        <field name="db_datas" readonly="1" invisible="db_datas == False" widget="binary" filename="name"/>
+                    <group class="ik_lw180">
+                        <field name="store_fname" readonly="1" invisible="store_fname == False" />
+                        <field name="file_size" readonly="1" invisible="store_fname == False" />
+                        <field name="ikas_is_file_storage_broken" readonly="0" invisible="store_fname == False" />
+                        <field name="ikas_file_location" readonly="0" invisible="store_fname == False" />
+                        <field name="db_datas" readonly="1" invisible="db_datas == False" widget="binary" filename="name" />
                     </group>
                     <group>
-                        <button string="Check file" 
-                                name="btn_check_file" 
-                                type="object" 
-                                colspan="2" 
-                                class="btn-info ik_inlinebtn" 
-                                icon="fa-thermometer"
-                                help="Try to open file."
-                                />
-                        <button string="Migrate file" 
-                                name="btn_migrate_file" 
-                                type="object" 
-                                icon="fa-bug"
-                                colspan="2" class="btn-danger ik_inlinebtn" 
-                                help="Launch migration of just this file. Use only to test and debug."
-                                />
+                        <button string="Check file" name="btn_check_file" type="object" colspan="2" class="btn-info ik_inlinebtn" icon="fa-thermometer" help="Try to open file." />
+                        <button string="Migrate file" name="btn_migrate_file" type="object" icon="fa-bug" colspan="2" class="btn-danger ik_inlinebtn" help="Launch migration of just this file. Use only to test and debug." />
                     </group>
                 </group>
             </xpath>
@@ -62,10 +27,10 @@
     <record id="ikas_ir_attachment__treeview_inherit" model="ir.ui.view">
         <field name="name">ikas.ir_attachment.treeview_inherit</field>
         <field name="model">ir.attachment</field>
-        <field name="inherit_id" ref="base.view_attachment_tree"/>
+        <field name="inherit_id" ref="base.view_attachment_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="before">
-                <field name="id" optional="hide"/>
+                <field name="id" optional="hide" />
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="mimetype" optional="show" />
@@ -74,7 +39,7 @@
                 <field name="store_fname" optional="hide" />
             </xpath>
             <xpath expr="//field[@name='create_uid']" position="after">
-                <field name="ikas_is_file_storage_broken" string="File Broken" optional="hide"/>
+                <field name="ikas_is_file_storage_broken" string="File Broken" optional="hide" />
             </xpath>
         </field>
     </record>
@@ -82,23 +47,20 @@
     <record id="ikas_ir_attachment__searchview_inherit" model="ir.ui.view">
         <field name="name">ikas.ir_attachment.searchview_inherit</field>
         <field name="model">ir.attachment</field>
-        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="inherit_id" ref="base.view_attachment_search" />
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='url_filter']" position="before">
-                <separator/>
-                <filter name="is_stored_in_file" string="Is Stored in File" domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '!=', False)]"/>
-                <filter name="is_field_data" string="Fields Data" domain="[('res_field', '!=', False)]"/>
-                <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]"/>
-                <filter name="all_data" string="All Data (Fields Data and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]"/>
-                <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True),'|',('res_field', '=', False),('res_field', '!=', False)]"/>
-                <filter name="is_bad_record" string="Bad records" 
-                        domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '=', False),('db_datas', '=', False)]"
-                        help="Records with no file name and no db_datas"
-                        />
-                <separator/>
+                <separator />
+                <filter name="is_stored_in_file" string="Is Stored in File" domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '!=', False)]" />
+                <filter name="is_field_data" string="Fields Data" domain="[('res_field', '!=', False)]" />
+                <filter name="is_attachment" string="Attachments" domain="[('res_field', '=', False)]" />
+                <filter name="all_data" string="All Data (Fields Data and Attachments)" domain="['|',('res_field', '=', False),('res_field', '!=', False)]" />
+                <filter name="is_storage_broken" string="Broken Files" domain="[('ikas_is_file_storage_broken', '=', True),'|',('res_field', '=', False),('res_field', '!=', False)]" />
+                <filter name="is_bad_record" string="Bad records" domain="['|',('res_field', '=', False),('res_field', '!=', False),('store_fname', '=', False),('db_datas', '=', False)]" help="Records with no file name and no db_datas" />
+                <separator />
             </xpath>
             <xpath expr="//group//filter[last()]" position="before">
-                <filter name="groupby__res_model" string="Related model"  context="{'group_by': 'res_model'}" />
+                <filter name="groupby__res_model" string="Related model" context="{'group_by': 'res_model'}" />
                 <filter name="groupby__res_field" string="Related field" context="{'group_by': 'res_field'}" />
                 <filter name="groupby__broken" string="Broken status" context="{'group_by': 'ikas_is_file_storage_broken'}" />
             </xpath>

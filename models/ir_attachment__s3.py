@@ -164,15 +164,21 @@ class InoukIRAttachmentS3(models.Model):
             else:
                 return None
 
-    @api.depends('store_fname', 'db_datas')
-    def _compute_raw(self):
+    @api.depends('store_fname', 'db_datas', 'file_size')
+    @api.depends_context('bin_size')
+    def _compute_datas(self):
         bin_size = self._context.get('bin_size')
-        IrAttachment = self.env['ir.attachment']
         for attachment_obj in self:
-            if attachment_obj.store_fname:
-                attachment_obj.datas = attachment_obj._file_read(attachment_obj.store_fname)
-            else:
-                attachment_obj.datas = base64.b64decode(attachment_obj.db_datas) # Il fallait décoder db_datas
+            try:
+                if attachment_obj.store_fname:
+                    attachment_obj.datas = attachment_obj._file_read(attachment_obj.store_fname, bin_size)
+                elif isinstance(attachment_obj.db_datas, str):
+                    attachment_obj.datas = base64.b64decode(attachment_obj.db_datas)
+                else:
+                    attachment_obj.datas = b''
+            except (binascii.Error, ValueError, TypeError) as e:
+                _logger.warning("Attachment decode error: %s (%s)", attachment_obj.name, str(e))
+                attachment_obj.datas = b''
 
     @api.model
     def _file_read(self, fname):

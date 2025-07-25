@@ -130,19 +130,27 @@ class InoukIRAttachment(models.Model):
         _storage = self._storage()  # get value of ir.parameter
         for idx, attachment_id in enumerate(ids, start=1):
             attachment_obj = self.sudo().browse(attachment_id)
-            _task_logger.info(
-                "Migrate Attachment %s (%s/%s) to '%s' storage.",
-                attachment_obj,
-                idx,
-                len(ids),
-                _storage
-            )
-            # To migrate we juste rewrite object datas
-            attachment_obj.write({
-                #"datas": attachment_obj.datas, 
-                "raw": attachment_obj.raw, 
-                "mimetype": attachment_obj.mimetype
-            })
+            try:
+                _task_logger.info(
+                    "Migrate Attachment %s (%s/%s) to '%s' storage.",
+                    attachment_obj,
+                    idx,
+                    len(ids),
+                    _storage
+                )
+                _ = attachment_obj.raw
+
+                # To migrate we juste rewrite object datas
+                attachment_obj.write({
+                    "raw": attachment_obj.raw,
+                    "mimetype": attachment_obj.mimetype
+                })
+
+            except Exception as e:
+                _task_logger.warning(
+                    "Skipping attachment ID %s (%s) due to error: %s",
+                    attachment_id, attachment_obj.name, e
+                )
         _task_logger.info("Finished migration to storage:'%s' of ir.attachments:%s", _storage, ids)
 
     def btn_migrate(self):

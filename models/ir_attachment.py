@@ -221,7 +221,7 @@ class InoukIRAttachment(models.Model):
             raise Exception("Unsupported value for location:'%s' (allowed: 'db', 'file')" % (
                 location,
             ))
-        _logger.warning("Moving all attachments to '%s'", location)
+        _logger.info("Moving all attachments to '%s'", location)
         _r = self.env["ir.config_parameter"].sudo().set_param(
             "ir_attachment.location", 
             location

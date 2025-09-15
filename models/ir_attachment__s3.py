@@ -25,6 +25,7 @@ import random
 import time
 import os
 import base64
+import binascii
 
 from odoo import api, models, fields
 from odoo.tools.translate import _

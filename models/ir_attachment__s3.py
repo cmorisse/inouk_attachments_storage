@@ -173,8 +173,11 @@ class InoukIRAttachmentS3(models.Model):
             try:
                 if attachment_obj.store_fname:
                     attachment_obj.datas = attachment_obj._file_read(attachment_obj.store_fname, bin_size)
-                elif isinstance(attachment_obj.db_datas, str):
-                    attachment_obj.datas = base64.b64decode(attachment_obj.db_datas)
+                elif attachment_obj.db_datas:
+                    if isinstance(attachment_obj.db_datas, bytes):
+                        attachment_obj.datas = base64.b64encode(attachment_obj.db_datas)
+                    else:
+                        attachment_obj.datas = attachment_obj.db_datas
                 else:
                     attachment_obj.datas = b''
             except (binascii.Error, ValueError, TypeError) as e:

@@ -42,4 +42,33 @@ class InoukAttachmentStorageTestCase(common.TransactionCase):
         super().tearDown()
 
     def test_migrate_attachments(self):
-        self.model.search([], limit=50).migrate()
+        """Moving attachments between storages must not change what they hold.
+
+        `setUp` flips ir_attachment.location, so this really moves the bytes --
+        database rows to the filestore, or back. Odoo owns the migration itself;
+        what this addon supplies is the _file_read / _file_write pair underneath
+        it. So the invariant worth asserting is the one a storage layer can
+        actually break: the content has to survive the move.
+
+        Note `_migrate`, with the underscore. Odoo made the method private at
+        some point and this test kept calling the public `migrate()` for
+        several releases, raising AttributeError -- unnoticed, because nothing
+        ran it until the suite started covering this addon.
+        """
+        attachments_obj = self.model.search([("type", "=", "binary")], limit=50)
+        if not attachments_obj:
+            self.skipTest("no binary attachment in this database to migrate")
+
+        content_before = {a.id: a.raw for a in attachments_obj}
+
+        attachments_obj._migrate()
+
+        attachments_obj.invalidate_recordset()
+        content_after = {
+            a.id: a.raw for a in self.model.browse(list(content_before))
+        }
+        self.assertEqual(
+            content_after,
+            content_before,
+            "migrating storage must preserve every attachment's content",
+        )
